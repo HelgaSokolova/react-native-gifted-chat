@@ -43,6 +43,7 @@ export interface MessageProps<TMessage extends IMessage> {
   containerStyle?: LeftRightStyle<ViewStyle>
   renderBubble?(props: Bubble['props']): React.ReactNode
   renderDay?(props: Day['props']): React.ReactNode
+  renderDayTime?(props: Day['props']): React.ReactNode
   renderSystemMessage?(props: SystemMessage['props']): React.ReactNode
   renderAvatar?(props: Avatar['props']): React.ReactNode
   shouldUpdateMessage?(
@@ -59,6 +60,7 @@ export default class Message<
     renderAvatar: undefined,
     renderBubble: null,
     renderDay: null,
+    renderDayTime: null,
     renderSystemMessage: null,
     position: 'left',
     currentMessage: {},
@@ -77,6 +79,7 @@ export default class Message<
     showUserAvatar: PropTypes.bool,
     renderBubble: PropTypes.func,
     renderDay: PropTypes.func,
+    renderDayTime: PropTypes.func,
     renderSystemMessage: PropTypes.func,
     position: PropTypes.oneOf(['left', 'right']),
     currentMessage: PropTypes.object,
@@ -126,6 +129,14 @@ export default class Message<
         return this.props.renderDay(props)
       }
       return <Day {...props} />
+    }
+    return null
+  }
+
+  renderDayTime() {
+    const { containerStyle, onMessageLayout, ...props } = this.props
+    if (this.props.renderDayTime) {
+      return this.props.renderDayTime(props)
     }
     return null
   }
@@ -203,6 +214,7 @@ export default class Message<
               {this.props.position === 'right' ? this.renderAvatar() : null}
             </View>
           )}
+          {this.renderDayTime()}
         </View>
       )
     }
